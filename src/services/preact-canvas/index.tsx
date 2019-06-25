@@ -108,6 +108,7 @@ interface State {
   nebulaFlashTrigger: boolean;
   flashColorDark: Color;
   flashColorLight: Color;
+  highlights: boolean;
 }
 
 export type GameChangeCallback = (stateChange: GameStateChange) => void;
@@ -138,6 +139,7 @@ export default class Root extends Component<Props, State> {
     nebulaFlashTrigger: false,
     flashColorLight: nebulaSafeLight,
     flashColorDark: nebulaSafeDark
+    highlights: true
   };
   private previousFocus: HTMLElement | null = null;
 
@@ -159,7 +161,8 @@ export default class Root extends Component<Props, State> {
 
       this.setState({
         motionPreference: await lazyImport!.shouldUseMotion(),
-        vibrationPreference: await lazyImport!.getVibrationPreference()
+        vibrationPreference: await lazyImport!.getVibrationPreference(),
+        highlights: await lazyImport!.getHighlights()
       });
     });
 
@@ -250,6 +253,7 @@ export default class Root extends Component<Props, State> {
       nebulaFlashTrigger,
       flashColorDark,
       flashColorLight
+      highlights
     }: State
   ) {
     let mainComponent: VNode;
@@ -273,6 +277,8 @@ export default class Root extends Component<Props, State> {
                 texturePromise={texturePromise}
                 useVibration={vibrationPreference}
                 onVibrationPrefChange={this._onVibrationPrefChange}
+                onHighlightsChange={this._onHighlightsChange}
+                highlights={highlights}
               />
             )}
           />
@@ -305,6 +311,7 @@ export default class Root extends Component<Props, State> {
               bestTime={bestTime}
               useVibration={vibrationPreference}
               afterHoldFlash={this._afterHoldFlash}
+              useHighlights={highlights}
             />
           )}
         />
@@ -390,6 +397,14 @@ export default class Root extends Component<Props, State> {
     this.setState({ vibrationPreference });
     const { setVibrationPreference } = await lazyImportReady;
     setVibrationPreference(vibrationPreference);
+  }
+
+  @bind
+  private async _onHighlightsChange() {
+    const highlights = !this.state.highlights;
+    this.setState({ highlights });
+    const { setHighlights } = await lazyImportReady;
+    setHighlights(highlights);
   }
 
   @bind
