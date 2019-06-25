@@ -138,7 +138,7 @@ export default class Root extends Component<Props, State> {
     vibrationPreference: true,
     nebulaFlashTrigger: false,
     flashColorLight: nebulaSafeLight,
-    flashColorDark: nebulaSafeDark
+    flashColorDark: nebulaSafeDark,
     highlights: true
   };
   private previousFocus: HTMLElement | null = null;
@@ -252,7 +252,7 @@ export default class Root extends Component<Props, State> {
       vibrationPreference,
       nebulaFlashTrigger,
       flashColorDark,
-      flashColorLight
+      flashColorLight,
       highlights
     }: State
   ) {
